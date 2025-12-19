@@ -1,0 +1,25 @@
+<?php
+// @codingStandardsIgnoreFile
+
+/** @var $block \WeltPixel\Quickview\Block\Initialize */
+
+/** @var \WeltPixel\Quickview\Helper\Data $_helper */
+$_helper = $this->helper('WeltPixel\Quickview\Helper\Data');
+$cspNonceProvider = $_helper->getCspNonceProvider();
+?>
+<script<?php if ($cspNonceProvider): ?> nonce="<?= $block->escapeHtmlAttr($cspNonceProvider->generateNonce()) ?>"<?php endif; ?>>
+    requirejs(['jquery', 'weltpixel_quickview' ],
+        function   ($, quickview) {
+            $(document).ready(function() {
+                $('.weltpixel-quickview').bind('click', function() {
+                    var prodUrl = $(this).attr('data-quickview-url');
+                    if (prodUrl.length) {
+                        quickview.displayContent(prodUrl);
+                        return false;
+                    }
+                });
+            });
+        });
+
+    window.weltpixel_quickview = <?php /* @noEscape */ echo json_encode($block->getConfig()); ?>;
+</script>
